@@ -1,0 +1,45 @@
+[advisories]
+version = 2
+yanked = "deny"
+unmaintained = "all"
+
+[licenses]
+version = 2
+confidence-threshold = 0.8
+allow = [
+    "0BSD",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "CC0-1.0",
+    "CDLA-Permissive-2.0",
+    "GPL-3.0-only",
+    "ISC",
+    "LGPL-2.1-or-later",
+    "MIT",
+    "MIT-0",
+    "Unicode-3.0",
+    "Unlicense",
+    "Zlib",
+]
+
+[licenses.private]
+ignore = false
+
+[bans]
+multiple-versions = "warn"
+skip = [
+    { name = "cpufeatures", version = "0.2.17", reason = "pinned by sha2 0.10.9 (workspace dependency); blake3 1.8.5 requires cpufeatures 0.3" },
+    { name = "getrandom", version = "0.2.17", reason = "pinned by ring 0.17.14 via the rustls/reqwest chain; the workspace uses getrandom 0.4" },
+    { name = "syn", version = "2.0.118", reason = "pinned by the serde/clap/rkyv derive ecosystem; syn 3 is required by thiserror 2 (workspace dependency)" },
+    { name = "thiserror", version = "1.0.69", reason = "pinned by gherkin 0.14.0, a build dependency of cucumber 0.21.1 (e2e dev-dependency); the workspace uses thiserror 2" },
+    { name = "thiserror-impl", version = "1.0.69", reason = "proc-macro companion of thiserror 1.0.69, pinned by gherkin 0.14.0 via cucumber 0.21.1" },
+    { name = "windows-sys", version = "0.52.0", reason = "pinned by ring 0.17.14 via the rustls/reqwest chain; the workspace uses windows-sys 0.61" },
+    { name = "windows-sys", version = "0.59.0", reason = "pinned by console 0.15.11 via cucumber 0.21.1 (e2e dev-dependency); the workspace uses windows-sys 0.61" },
+]
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

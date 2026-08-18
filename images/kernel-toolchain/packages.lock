@@ -1,0 +1,24 @@
+# Jyth kernel-toolchain package lock
+#
+# The exact Alpine packages installed into the toolchain image. The base is
+# pinned by OCI manifest digest in the Containerfile; the package list here is
+# the build-time `apk add` set. When the pinned base digest changes, rebuild
+# the image and verify this list against `Containerfile` and
+# `libs/jyth/assets/kernel-build/build_kernel.sh`.
+
+# Base image:
+#   alpine@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
+#   (Alpine 3.24.1)
+
+packages:
+  - build-base
+  - bash
+  - bc
+  - bison
+  - flex
+  - perl
+  - tar
+  - wget
+  - xz
+  - linux-headers
+  - elfutils-dev

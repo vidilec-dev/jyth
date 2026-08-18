@@ -1,0 +1,14 @@
+# Test fixture binary: creates a real hypervisor-hcs session journal in a
+# separate process and holds the redb writer lock until terminated. Built on
+# demand by hypervisor-hcs journal tests via escargot; never shipped.
+[package]
+name = "journal-lock-hold"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+hypervisor-hcs = { workspace = true }
+uuid           = { workspace = true }

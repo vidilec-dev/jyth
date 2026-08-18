@@ -1,0 +1,25 @@
+[package]
+name = "init"
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+async-io = "2"
+blake3 = "1.8.5"
+futures-lite = "2"
+protocol = { path = "../protocol" }
+libc = "0.2.186"
+smol = "2"
+nix = { version = "0.31.3", features = ["term"] }
+tokio-util = "0.7.18"
+tokio.workspace = true
+uuid.workspace = true
+error-stack.workspace = true
+
+tracing = { workspace = true, optional = true }
+
+
+[features]
+tracing = ["dep:tracing"]

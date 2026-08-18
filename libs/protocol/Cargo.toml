@@ -1,0 +1,15 @@
+[package]
+name = "protocol"
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+uuid.workspace = true
+rkyv.workspace = true
+error-stack.workspace = true
+getrandom.workspace = true
+sha2.workspace = true
+subtle.workspace = true
+zeroize.workspace = true

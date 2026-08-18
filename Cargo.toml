@@ -1,0 +1,54 @@
+[workspace]
+resolver = "3"
+members = [
+    "libs/*",
+    "tests/e2e",
+    "tests/arch",
+    "tests/fixtures/file-check",
+    "tests/fixtures/journal-lock-hold",
+    "tests/fixtures/runtime-isolation",
+    "binaries/*", 
+    "util/tracing",
+]
+
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+rust-version = "1.95.0"
+license = "MIT"
+
+[workspace.dependencies]
+hypervisor     = { path = "libs/hypervisor" }
+scheduler      = { path = "libs/scheduler" }
+protocol       = { path = "libs/protocol" }
+jyth           = { path = "libs/jyth" }
+com            = { path = "libs/com" }
+vm-model       = { path = "libs/vm-model" }
+hypervisor-api = { path = "libs/hypervisor-api" }
+hypervisor-hcs = { path = "libs/hypervisor-hcs" }
+hypervisor-kvm = { path = "libs/hypervisor-kvm" }
+hcs-admin      = { path = "libs/hcs-admin" }
+guest-client   = { path = "libs/guest-client" }
+boot-image     = { path = "libs/boot-image" }
+jyth-runtime   = { path = "libs/jyth-runtime" }
+image-core     = { path = "libs/image-core" }
+tracing        = { path = "util/tracing" }
+
+tokio-util  = { version = "0.7.18"}
+tokio       = { version = "1.52.3", features = ["full"] }
+bytes       = { version = "1" }
+ipnet       = { version = "2.12.0" }
+uuid        = { version = "1.23.4", features = ["v7", "serde"] }
+rkyv        = { version = "0.8.17", features = ["uuid-1"] }
+getrandom   = { version = "0.4.3" }
+sha2        = { version = "0.10.9" }
+subtle      = { version = "2.6.1" }
+zeroize     = { version = "1.9.0" }
+clap        = { version = "4.6.2", features = ["derive"] }
+redb        = { version = "4.1" }
+serde       = { version = "1.0", features = ["derive"] }
+serde_json  = { version = "1.0", features = ["preserve_order"] }
+
+error-stack = { version = "0.8" }
+thiserror   = { version = "2.0.19" }
+

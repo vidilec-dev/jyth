@@ -1,0 +1,15 @@
+[package]
+name = "hypervisor-kvm"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+hypervisor-api.workspace = true
+vm-model.workspace = true
+error-stack.workspace = true
+uuid = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }

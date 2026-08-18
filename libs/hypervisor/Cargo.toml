@@ -1,0 +1,17 @@
+[package]
+name = "hypervisor"
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+error-stack    = { workspace = true }
+hypervisor-api = { workspace = true }
+hypervisor-hcs = { workspace = true }
+hypervisor-kvm = { workspace = true }
+uuid           = { workspace = true, features = ["v4"] }
+
+[features]
+tracing = ["hypervisor-hcs/tracing"]
+

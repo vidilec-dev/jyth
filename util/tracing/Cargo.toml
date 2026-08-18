@@ -1,0 +1,10 @@
+[package]
+name = "tracing"
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+cratesio_tracing   = { package = "tracing", version = "0.1" }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

@@ -1,0 +1,39 @@
+# The Jyth kernel-toolchain rootfs image.
+#
+# This image contains every package required by the reusable kernel build
+# script (`libs/jyth/assets/kernel-build/build_kernel.sh`) so a cacheable
+# custom-kernel build performs no runtime package installation. The image is
+# built from a pinned Alpine base digest and is consumed only by OCI manifest
+# digest (never by a mutable tag).
+#
+# Rebuild procedure (recorded in README.md): `docker build` against the
+# pinned base digest, then push the immutable manifest to the Jyth registry
+# and record the manifest digest in the compiler adapter.
+FROM alpine@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
+
+# The complete toolchain package set, installed while the image is built.
+# The list mirrors the packages previously installed at runtime by
+# build_kernel.sh; every entry must stay in sync with `packages.lock`.
+RUN apk add --no-cache --no-progress \
+    build-base \
+    bash \
+    bc \
+    bison \
+    flex \
+    perl \
+    tar \
+    wget \
+    xz \
+    linux-headers \
+    elfutils-dev
+
+# Fail fast when a required tool is missing from the image, before any guest
+# build can start. The build script repeats the same verification for the
+# cacheable build path, but an image that cannot build a kernel must not be
+# published under the toolchain identity.
+RUN set -eu; \
+    for tool in gcc make bash bc bison flex perl tar wget xz getconf grep sed; do \
+        command -v "$tool" >/dev/null 2>&1 || { echo "missing tool: $tool" >&2; exit 1; }; \
+    done; \
+    test -f /usr/include/asm/types.h; \
+    test -f /usr/include/libelf.h

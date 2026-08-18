@@ -1,0 +1,18 @@
+# Test fixture binary: creates real HCS host resources (journal record, HNS
+# network, VHDX, compute system) in a separate process, then either leaves
+# them behind (crash simulation), holds the redb writer lock until terminated,
+# or opens a fresh session whose stale-session recovery cleans a dead one.
+# Built on demand by the e2e runtime-isolation tests via escargot; never
+# shipped.
+[package]
+name = "runtime-isolation-fixture"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+hypervisor = { workspace = true }
+vm-model   = { workspace = true }
+tokio      = { workspace = true }

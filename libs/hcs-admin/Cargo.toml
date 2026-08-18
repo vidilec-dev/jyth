@@ -1,0 +1,19 @@
+[package]
+name = "hcs-admin"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+hypervisor-hcs = { workspace = true }
+error-stack    = { workspace = true }
+uuid           = { workspace = true }
+tracing        = { workspace = true, optional = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+serde      = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+
+[features]
+tracing = ["dep:tracing"]

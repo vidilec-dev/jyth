@@ -1,0 +1,28 @@
+**/target
+**/boot.log
+**/*.log
+**/*.apk
+**/.cache
+
+# Local web tooling and the separately published project site
+**/node_modules
+**/.pnpm-store
+**/.wrangler
+**/dist
+**/outputs
+/site/
+
+# Jyth-generated image, VM, and profiling artifacts
+**/.jyth-v*/
+**/.jyth-derived-v*/
+**/trace-*.json
+**/kernel.bin
+**/initrd.img
+**/rootfs.cpio
+**/*.vhdx
+
+# Local tooling state (not project artifacts)
+**/.atl/
+**/.codegraph/
+
+.kernel-poc/apks/extracted/

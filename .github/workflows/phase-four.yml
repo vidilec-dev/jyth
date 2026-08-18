@@ -1,0 +1,110 @@
+name: Phase Four
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Windows quality and release gates
+    runs-on: windows-latest
+    env:
+      RUSTDOCFLAGS: -D missing_docs -D rustdoc::broken_intra_doc_links
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run strict workspace Clippy gate
+        run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+
+      - name: Run workspace tests
+        run: cargo test --workspace --all-features --locked --exclude e2e-tests
+
+      - name: Compile the E2E targets including the kernel-builder harness
+        run: cargo test -p e2e-tests --no-run --jobs 1 --features kernel-builder-e2e --locked
+
+      - name: Lint the kernel-builder binary
+        run: cargo clippy -p kernel-builder --all-targets --locked -- -D warnings
+
+      - name: Check public API documentation
+        run: cargo doc --workspace --no-deps --all-features --locked
+
+      - name: Enforce the dependency policy
+        uses: embarkstudios/cargo-deny-action@v2
+        with:
+          command: check
+
+  live-gates:
+    name: Live HCS gates (cold + warm)
+    # Runs only when a self-hosted runner carrying the `hyper-v` label is
+    # registered; GitHub skips the job when no such runner exists, so PRs
+    # never block on a machine that is not present. `if: always()` keeps the
+    # live gates independent of the quality job's outcome — the live suite
+    # stays a pending release gate, not a PR gate.
+    runs-on: [self-hosted, hyper-v]
+    if: always()
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Compile the E2E targets including the kernel-builder harness
+        run: cargo test -p e2e-tests --no-run --jobs 1 --features kernel-builder-e2e --locked
+
+      - name: Cold live-gate pass (empty derived cache)
+        run: |
+          cargo test -p e2e-tests --test direct_process --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+          cargo test -p e2e-tests --test file_injection --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+          cargo test -p e2e-tests --test scheduler --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+          cargo test -p e2e-tests --test kernel_builder --features kernel-builder-e2e --locked
+          cargo test -p e2e-tests --test runtime_isolation --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+          cargo test -p e2e-tests --test command_security --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+          cargo test -p e2e-tests --test disk_lifecycle --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+
+      - name: Warm live-gate pass (derived cache populated)
+        run: |
+          cargo test -p e2e-tests --test direct_process --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+          cargo test -p e2e-tests --test file_injection --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+          cargo test -p e2e-tests --test scheduler --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+          cargo test -p e2e-tests --test kernel_builder --features kernel-builder-e2e --locked
+          cargo test -p e2e-tests --test runtime_isolation --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+          cargo test -p e2e-tests --test command_security --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+          cargo test -p e2e-tests --test disk_lifecycle --features kernel-builder-e2e --locked -- --nocapture --test-threads=1
+
+  msrv:
+    name: MSRV 1.95.0 workspace check
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Rust 1.95.0
+        uses: dtolnay/rust-toolchain@1.95.0
+
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Check the workspace at the MSRV floor
+        run: cargo check --workspace --all-features --locked

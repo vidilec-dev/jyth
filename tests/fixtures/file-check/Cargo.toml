@@ -1,0 +1,12 @@
+# Guest-side fixture binary: compiled by the host jyth builder and injected
+# into the guest at /bin/file-check. Deliberately std-only so the musl
+# cross-build links with rust-lld (no C toolchain needed).
+[package]
+name = "file-check"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]

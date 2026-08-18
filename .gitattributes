@@ -1,0 +1,2 @@
+# The kernel-builder script is embedded byte-for-byte and executed by Alpine /bin/sh.
+/binaries/kernel-builder/src/build_kernel.sh text eol=lf

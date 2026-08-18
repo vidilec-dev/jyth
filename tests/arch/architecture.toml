@@ -1,0 +1,127 @@
+# Declarative architecture manifest — Jyth workspace dependency rules.
+#
+# Source of truth: impl/SolidArchitecturePlan.md (target crate catalog,
+# target dependency direction, forbidden dependency edges).
+#
+# Every workspace member MUST appear exactly once in [packages] (production)
+# or [test-packages] (test-only). Every production edge MUST be declared as
+# an `allowed`/`allowed_dev` edge or as a `temporary` edge with a named
+# removal phase. Anything else is rejected by the architecture test.
+
+# ---------------------------------------------------------------------------
+# Production packages, one entry per crate.
+# `layer` and `responsibility` mirror the target crate catalog; `allowed`
+# lists normal dependency edges, `allowed_dev` lists dev-only edges.
+# ---------------------------------------------------------------------------
+
+[packages.tracing]
+layer = "auxiliary"
+responsibility = "tracing infrastructure"
+allowed = []
+
+[packages.com]
+layer = "transport"
+responsibility = "authenticated host transport"
+allowed = ["protocol", "tracing"]
+
+[packages.protocol]
+layer = "wire"
+responsibility = "versioned wire values and cryptographic transcripts"
+allowed = []
+
+[packages."image-core"]
+layer = "materialization"
+responsibility = "external source acquisition and artifact store infrastructure"
+allowed = ["tracing"]
+
+[packages.kernel]
+layer = "materialization"
+responsibility = "kernel specification and materialization"
+allowed = ["image-core", "tracing"]
+
+[packages.rootfs]
+layer = "materialization"
+responsibility = "root filesystem materialization"
+allowed = ["image-core", "tracing"]
+
+[packages.init]
+layer = "guest"
+responsibility = "guest boot and guest command-service behavior"
+allowed = ["protocol", "tracing"]
+
+[packages.scheduler]
+layer = "coordination"
+responsibility = "generic conditional work coordination"
+allowed = []
+
+[packages.hypervisor]
+layer = "platform"
+responsibility = "default platform selection and compatibility forwarding"
+allowed = ["hypervisor-api", "hypervisor-hcs", "hypervisor-kvm"]
+
+[packages.jyth]
+layer = "facade"
+responsibility = "public facade and default dependency composition"
+allowed = ["boot-image", "com", "guest-client", "hypervisor", "image-core", "jyth-runtime", "kernel", "protocol", "rootfs", "scheduler", "vm-model", "tracing"]
+
+[packages."kernel-builder"]
+layer = "use-case"
+responsibility = "kernel-builder command-line use case"
+allowed = ["jyth", "image-core", "tracing"]
+
+# ---------------------------------------------------------------------------
+# Planned production crates (target catalog). The test enforces only edges of
+# packages that exist in the workspace; entries below document the target
+# contract and activate automatically when each crate is introduced.
+# ---------------------------------------------------------------------------
+
+[packages."vm-model"]
+layer = "model"
+responsibility = "validated host-neutral VM specifications and outcomes"
+allowed = []
+
+[packages."boot-image"]
+layer = "boot"
+responsibility = "deterministic guest boot-artifact assembly"
+allowed = ["vm-model"]
+
+[packages."hypervisor-api"]
+layer = "contracts"
+responsibility = "host-neutral backend and instance contracts"
+allowed = ["vm-model"]
+
+[packages."hypervisor-hcs"]
+layer = "backend"
+responsibility = "journaled Windows/HCS VM lifecycle"
+allowed = ["hypervisor-api", "vm-model", "tracing"]
+
+[packages."hypervisor-kvm"]
+layer = "backend"
+responsibility = "experimental Linux/KVM backend"
+allowed = ["hypervisor-api", "vm-model"]
+
+[packages."hcs-admin"]
+layer = "admin"
+responsibility = "explicit operator-directed HCS inspection and cleanup"
+allowed = ["hypervisor-hcs", "tracing"]
+
+[packages."guest-client"]
+layer = "guest-client"
+responsibility = "typed guest file and process operations over a transport contract"
+allowed = ["protocol", "tracing"]
+
+[packages."jyth-runtime"]
+layer = "runtime"
+responsibility = "host-side VM application lifecycle orchestration"
+allowed = ["vm-model", "hypervisor-api", "scheduler", "guest-client", "protocol", "tracing"]
+# Rejects a runtime-to-concrete-adapter edge: only contracts and generic
+# services are allowed.
+
+# ---------------------------------------------------------------------------
+# Non-production crates (tests and examples; their own edges are not enforced,
+# but no production crate may depend on them).
+# ---------------------------------------------------------------------------
+
+[non-production]
+members = ["e2e-tests", "arch-tests", "file-check", "journal-lock-hold", "runtime-isolation-fixture"]
+

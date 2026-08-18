@@ -1,0 +1,59 @@
+[package]
+name = "e2e-tests"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+tokio              = { workspace = true }
+tokio-util         = { workspace = true }
+jyth               = { path = "../../libs/jyth" }
+kernel             = { path = "../../libs/kernel" }
+rootfs             = { path = "../../libs/rootfs" }
+hypervisor         = { workspace = true }
+hypervisor-hcs     = { workspace = true }
+com                = { workspace = true }
+protocol           = { workspace = true }
+uuid               = { workspace = true }
+vm-model           = { workspace = true }
+hcs-admin          = { path = "../../libs/hcs-admin" }
+tracing            = { workspace = true, optional = true }
+
+[features]
+# When enabled, the e2e test harness installs a `tracing_subscriber::fmt`
+# layer and a `tracing_chrome::ChromeLayer` writing to `trace-<pid>.json`
+# before any test runs — set up via a `Once`-guarded helper invoked at the
+# top of each `#[tokio::test]`. The feature also enables `jyth/profiling`,
+# which forwards to the hypervisor, com, image-core, kernel, and
+# rootfs crates so their `#[instrument]` spans ride the same layers.
+tracing = ["dep:tracing", "jyth/tracing"]
+kernel-builder-e2e = []
+# When enabled, the kernel_builder cucumber runner relays the kernel-builder
+# child's stdout/stderr to the test harness stderr live, so long in-guest
+# kernel builds show visible progress. Off by default: the retained capture
+# (used for failure evidence) is collected regardless.
+live-output = []
+
+# The live-host lock (`hcs_test_guard`) takes an OS-held exclusive lock via
+# `LockFileEx`, which the OS releases automatically when the holding process
+# dies — a crashed test binary can never wedge the suite. Same version as the
+# windows-sys already in the workspace lock (transitive via tokio).
+[target.'cfg(target_os = "windows")'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_IO", "Win32_System_Threading"] }
+
+[[test]]
+name = "kernel_builder"
+path = "tests/kernel_builder.rs"
+harness = false
+required-features = ["kernel-builder-e2e"]
+
+[dev-dependencies]
+cucumber = "0.21.1"
+escargot = "0.5.15"
+# Matches the kernel crate's archive dependency, used by the materialization
+# matrix to build `newc` CPIO fixtures with two kernel entries.
+cpio = "0.4.1"
+
+

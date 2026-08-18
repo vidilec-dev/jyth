@@ -1,0 +1,13 @@
+[package]
+name = "vm-model"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+ipnet.workspace = true
+thiserror.workspace = true
+
+[target.'cfg(target_os = "windows")'.dependencies]
+serde = { version = "1.0", features = ["derive"] }

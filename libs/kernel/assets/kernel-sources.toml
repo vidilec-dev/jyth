@@ -1,0 +1,37 @@
+# Reviewed kernel source pins for cacheable custom builds.
+#
+# Every entry is a reviewed, immutable source: an exact kernel version, a
+# canonical HTTPS URL on cdn.kernel.org, and the SHA-256 digest of the
+# archive. Runtime builds trust this reviewed digest, never a mutable upstream
+# version listing.
+#
+# Update procedure (recorded in docs/SecurityBoundaries.md):
+#   1. Download the upstream signed checksums for the release:
+#      https://cdn.kernel.org/pub/linux/kernel/v7.x/sha256sums.asc
+#   2. Verify the signature against the kernel.org signing key.
+#   3. Record the verified digest here as a reviewed source change with the
+#      provenance in the commit message.
+#
+# Provenance: digests read from the upstream signed sha256sums.asc on
+# 2026-08-15.
+schema_version = 1
+
+[[release]]
+version = "6.6.14"
+url = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.6.14.tar.xz"
+sha256 = "fbe96b2db3f962cd2a96a849d554300e7a4555995160082d4f323c2a1dfa1584"
+
+[[release]]
+version = "7.1.6"
+url = "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.1.6.tar.xz"
+sha256 = "995dd7188d924662b94b48fd6fb783587267590e5b8bb33dade2c771e7d855c1"
+
+[[release]]
+version = "7.1.7"
+url = "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.1.7.tar.xz"
+sha256 = "ca8f2a6884a4d62043e9ab93ac1ab15efc2b6630fe8f768b2ef2ffdf4b5e26df"
+
+[[release]]
+version = "7.1.8"
+url = "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.1.8.tar.xz"
+sha256 = "ff01dcb449279d5b4cfccdb01fee639cf5ff1803f1749a77844dd33915422c49"
