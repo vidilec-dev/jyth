@@ -119,14 +119,4 @@ jobs:
             --base main \
             --head "$branch" \
             --title "chore: pin kernel-toolchain manifest digest to $short" \
-            --body "Automated by the kernel-toolchain publish workflow.
-
-The rebuild produced a new immutable manifest digest:
-
-\`\`\`
-$DIGEST
-\`\`\`
-
-\`TOOLCHAIN_ROOTFS_OCI\` now points at the GHCR image by that digest. The
-image is consumed only by digest; the \`latest\` tag is never used at
-runtime."
+            --body $'Automated by the kernel-toolchain publish workflow.\n\nThe rebuild produced a new immutable manifest digest:\n\n```\n'"$DIGEST"$'\n```\n\n`TOOLCHAIN_ROOTFS_OCI` now points at the GHCR image by that digest. The image is consumed only by digest; the `latest` tag is never used at runtime.'
