@@ -70,13 +70,14 @@ use crate::{DiskRetention, DiskSpec, ExistingDiskPolicy, GuestMount};
 const RECIPE_VERSION: u32 = 2;
 
 /// The pinned Jyth kernel-toolchain rootfs (immutable manifest digest on the
-/// Jyth LAN registry). The image contains every package required by
+/// Jyth GHCR repository). The image contains every package required by
 /// `build_kernel.sh`; the build script verifies that every required tool
 /// already exists in this rootfs instead of relying on a mutable package
-/// repository. Plan variation: the registry is a plain-HTTP LAN registry, so
-/// the reference carries an explicit `http://` scheme (mirroring
-/// `OciReference::from_manifest_url`); the manifest digest is the immutable
-/// identity.
+/// repository. Publication is automated by
+/// `.github/workflows/publish-toolchain.yml`: each rebuild pushes a new
+/// immutable manifest to `ghcr.io/vidilec-dev/jyth/kernel-toolchain` and
+/// opens a reviewed PR that records the new digest here. The manifest digest
+/// is the immutable identity; the tag is never used at runtime.
 pub const TOOLCHAIN_ROOTFS_OCI: &str = "http://ksmc-quartz.local:5000/jyth/kernel-toolchain@sha256:3ef3b703f40e3c669ea1ed7557344470f6f05921e7a48b9243da121ff5449f7f";
 
 /// Guest path of the injected reusable build script.

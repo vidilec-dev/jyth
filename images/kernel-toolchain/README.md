@@ -19,28 +19,31 @@ The image is consumed only by OCI manifest digest, so every rebuild changes
 the digest and requires a source change that records the new digest in
 `libs/jyth/src/build/kernel_compile.rs` (`TOOLCHAIN_ROOTFS_OCI`).
 
-1. Rebuild from the pinned base:
+Publication is automated by the GitHub Actions workflow
+`.github/workflows/publish-toolchain.yml`, which owns the build and the
+digest update:
 
-   ```sh
-   docker build -t ksmc-quartz.local:5000/jyth/kernel-toolchain:latest images/kernel-toolchain
+1. The workflow triggers on any change under `images/kernel-toolchain/` (or
+   via manual `workflow_dispatch`), builds the `Containerfile` with Buildx,
+   and pushes the immutable manifest to the Jyth GHCR repository:
+
+   ```text
+   ghcr.io/vidilec-dev/jyth/kernel-toolchain:latest
    ```
 
-2. Publish the image to the Jyth registry and capture the manifest digest:
-
-   ```sh
-   docker push ksmc-quartz.local:5000/jyth/kernel-toolchain:latest
-   docker manifest inspect ksmc-quartz.local:5000/jyth/kernel-toolchain:latest
-   ```
+2. The workflow opens a reviewed PR that records the new manifest digest in
+   `TOOLCHAIN_ROOTFS_OCI` as `ghcr.io/vidilec-dev/jyth/kernel-toolchain@sha256:...`.
 
    The manifest digest (the `sha256:...` in the `Docker-Content-Digest`
    header of the push, or `docker manifest inspect` output) is the immutable
    identity; the tag is never used at runtime.
 
-3. Update `TOOLCHAIN_ROOTFS_OCI` in `libs/jyth/src/build/kernel_compile.rs`
-   to the new `@sha256:` reference and land it as a reviewed source change.
+3. Merge that PR as a reviewed source change, and record the provenance in
+   the implementation record: base digest, package set, build command, and
+   the exact manifest digest used at runtime.
 
-4. Record the provenance in the implementation record: base digest, package
-   set, build command, and the exact manifest digest used at runtime.
+To rebuild manually without waiting for a source change, run the workflow
+with `workflow_dispatch` on `main`.
 
 ## Verification
 

@@ -1,0 +1,132 @@
+name: Publish kernel-toolchain
+
+# Builds the immutable Jyth kernel-toolchain rootfs and publishes it to the
+# GitHub Container Registry. The image is consumed only by OCI manifest
+# digest, so every rebuild produces a new digest and opens a reviewed PR that
+# records it in `libs/jyth/src/build/kernel_compile.rs`
+# (`TOOLCHAIN_ROOTFS_OCI`). Manual dispatch re-runs the same pipeline without
+# a source change.
+
+on:
+  push:
+    paths:
+      - "images/kernel-toolchain/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+concurrency:
+  group: toolchain-publish
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and publish to GHCR
+    runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push the toolchain image
+        id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: images/kernel-toolchain
+          file: images/kernel-toolchain/Containerfile
+          push: true
+          tags: ghcr.io/vidilec-dev/jyth/kernel-toolchain:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Report the immutable manifest digest
+        run: |
+          echo "Manifest digest: ${{ steps.build.outputs.digest }}"
+          echo "digest=${{ steps.build.outputs.digest }}" >> "$GITHUB_STEP_SUMMARY"
+
+  update-digest:
+    name: Open digest-update PR
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Update TOOLCHAIN_ROOTFS_OCI
+        id: update
+        env:
+          DIGEST: ${{ needs.build.outputs.digest }}
+        run: |
+          set -eu
+          python3 - "$DIGEST" <<'PY'
+          import os, re, sys
+
+          digest = sys.argv[1]
+          path = "libs/jyth/src/build/kernel_compile.rs"
+          expected = f'"ghcr.io/vidilec-dev/jyth/kernel-toolchain@{digest}"'
+
+          src = open(path, encoding="utf-8").read()
+          if expected in src:
+              print("result=already-current", file=open(
+                  os.environ["GITHUB_OUTPUT"], "a"))
+              sys.exit(0)
+
+          new_src, count = re.subn(
+              r'pub const TOOLCHAIN_ROOTFS_OCI: &str = "[^"]*";',
+              f"pub const TOOLCHAIN_ROOTFS_OCI: &str = {expected};",
+              src,
+              count=1,
+          )
+          if count != 1:
+              print("no-match", file=sys.stderr)
+              sys.exit(2)
+          open(path, "w", encoding="utf-8", newline="\n").write(new_src)
+          print("result=updated", file=open(os.environ["GITHUB_OUTPUT"], "a"))
+          PY
+
+      - name: Open the digest-update PR
+        if: steps.update.outputs.result == 'updated'
+        env:
+          DIGEST: ${{ needs.build.outputs.digest }}
+        run: |
+          set -eu
+          short="${DIGEST#sha256:}"
+          short="${short:0:12}"
+          branch="toolchain/publish-$short"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add libs/jyth/src/build/kernel_compile.rs
+          git commit -m "chore: pin kernel-toolchain manifest digest to $short"
+          git push origin "HEAD:$branch"
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "chore: pin kernel-toolchain manifest digest to $short" \
+            --body "Automated by the kernel-toolchain publish workflow.
+
+The rebuild produced a new immutable manifest digest:
+
+\`\`\`
+$DIGEST
+\`\`\`
+
+\`TOOLCHAIN_ROOTFS_OCI\` now points at the GHCR image by that digest. The
+image is consumed only by digest; the \`latest\` tag is never used at
+runtime."
