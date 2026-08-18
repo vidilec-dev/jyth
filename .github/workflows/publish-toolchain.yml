@@ -104,6 +104,7 @@ jobs:
         if: steps.update.outputs.result == 'updated'
         env:
           DIGEST: ${{ needs.build.outputs.digest }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -eu
           short="${DIGEST#sha256:}"
