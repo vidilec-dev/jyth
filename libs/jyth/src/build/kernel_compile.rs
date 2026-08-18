@@ -78,7 +78,7 @@ const RECIPE_VERSION: u32 = 2;
 /// immutable manifest to `ghcr.io/vidilec-dev/jyth/kernel-toolchain` and
 /// opens a reviewed PR that records the new digest here. The manifest digest
 /// is the immutable identity; the tag is never used at runtime.
-pub const TOOLCHAIN_ROOTFS_OCI: &str = "http://ksmc-quartz.local:5000/jyth/kernel-toolchain@sha256:3ef3b703f40e3c669ea1ed7557344470f6f05921e7a48b9243da121ff5449f7f";
+pub const TOOLCHAIN_ROOTFS_OCI: &str = "ghcr.io/vidilec-dev/jyth/kernel-toolchain@sha256:218ce0118a6670bf04af134dcda7c4d959513bd0e073cc87b79031345450f878";
 
 /// Guest path of the injected reusable build script.
 pub const BUILD_SCRIPT_GUEST_PATH: &str = "/usr/local/bin/build-kernel.sh";
