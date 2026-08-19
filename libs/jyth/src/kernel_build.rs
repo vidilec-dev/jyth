@@ -1,7 +1,8 @@
 //! Public custom-kernel tooling entry point.
 //!
 //! [`compile_kernel`] compiles a custom kernel specification through the
-//! same compiler adapter and kernel cache used by [`VmBuilder`] at launch,
+//! same compiler adapter and kernel cache used by
+//! [`crate::builder::VmBuilder`] at launch,
 //! and returns the host path of the cached bzImage. The `kernel-builder`
 //! CLI calls this entry point and copies the returned cached artifact to its
 //! `--output`; the entry point never launches a final target VM after the

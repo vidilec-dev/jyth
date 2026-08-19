@@ -5,7 +5,7 @@
 //! metadata table needed to fulfil the hard-link contract (target resolution
 //! and shared device/inode assignment) is held in memory, but every regular
 //! file body is streamed straight from the `tar::Entry` reader into the
-//! [`TempWriter`][crate::ops::io::TempWriter], so resident memory stays
+//! [`crate::ops::io::TempWriter`], so resident memory stays
 //! bounded by the metadata table.
 //!
 //! The `newc` writer implemented here mirrors the layout produced by the

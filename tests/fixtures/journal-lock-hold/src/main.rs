@@ -2,7 +2,8 @@
 //! process and holds the redb writer lock until terminated.
 //!
 //! The parent test owns the session id; this binary only creates the journal
-//! through the public [`SessionJournal::create_current`] API and signals
+//! through the public
+//! [`hypervisor_hcs::journal::SessionJournal::create_current`] API and signals
 //! readiness after the writer lock is acquired.
 //!
 //! Usage: journal-lock-hold <state-root> <session-id> <ready-file>

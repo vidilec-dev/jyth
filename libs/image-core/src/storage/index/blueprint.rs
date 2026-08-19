@@ -1,6 +1,6 @@
 //! Blueprint persistence.
 //!
-//! A blueprint is keyed by its [`ReferenceKey`][crate::storage::index::key::ReferenceKey],
+//! A blueprint is keyed by its `ReferenceKey`,
 //! not by provisional UUID, so it stays addressable while entry
 //! canonicalization replaces the provisional identity. The blueprint's
 //! target identity must equal the current `REFERENCES` value for the same

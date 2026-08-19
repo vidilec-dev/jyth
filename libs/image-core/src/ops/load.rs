@@ -9,7 +9,7 @@
 //!
 //! All blocking work (file copy, HTTP body streaming, format sniff) runs on
 //! [`tokio::task::spawn_blocking`]. The destination is never partially
-//! published: a [`TempWriter`][crate::ops::io::TempWriter] atomically replaces
+//! published: a [`crate::ops::io::TempWriter`] atomically replaces
 //! the previous file only after size and digest checks pass, preserving the
 //! previous destination when a verification fails.
 

@@ -4,7 +4,7 @@
 //! no parallel storage DTO or extra serialization framework is used. The
 //! cache is disposable and versioned as a unit, so the persisted byte layout
 //! lives beside the domain type and migrates by bumping the versioned cache
-//! directory plus the [`TypeName`](redb::TypeName) version.
+//! directory plus the [`redb::TypeName`] version.
 //!
 //! ## Encodings
 //!

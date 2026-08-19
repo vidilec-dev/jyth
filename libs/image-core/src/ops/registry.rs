@@ -1,4 +1,4 @@
-//! Shared HTTP registry client used by [`crate::ops::blueprint`] and the OCI
+//! Shared HTTP registry client used by [`crate::ops::blueprint()`] and the OCI
 //! source resolver.
 //!
 //! The client centralizes the OCI/Docker manifest and blob requests so all

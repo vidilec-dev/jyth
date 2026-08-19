@@ -51,7 +51,7 @@ pub(crate) fn change_layer<E>(error: Report<E>) -> Report<LayerError> {
 /// `target` carries the cache identity (which may be a request or source
 /// digest derived by the caller's service); `expected_link_digest` is the
 /// digest of the `link` snapshot the caller holds, verified by
-/// [`crate::ops::blueprint`] so a link cannot be swapped between reservation
+/// [`crate::ops::blueprint()`] so a link cannot be swapped between reservation
 /// and use.
 #[cfg_attr(feature = "tracing", instrument(skip_all, level = "debug"))]
 pub async fn get_or_build_blueprint(

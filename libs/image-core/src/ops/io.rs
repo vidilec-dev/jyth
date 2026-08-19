@@ -16,7 +16,7 @@
 //!   computing the local BLAKE3 hash and the total byte count.
 //!
 //! The crate always uses BLAKE3 to identify local bytes; the caller may pass
-//! an [`ExpectedDigest`][crate::digest::ExpectedDigest] separately to verify
+//! an [`crate::digest::ExpectedDigest`] separately to verify
 //! the bytes against a manifest-declared digest.
 
 use std::fs::{self, File, OpenOptions};
@@ -352,7 +352,7 @@ const PUBLISH_RETRY_BACKOFF: std::time::Duration = std::time::Duration::from_mil
 /// content-derived, so a concurrent publisher may win the swap first: on a
 /// contention error the destination is validated against `expected` and a
 /// matching destination is accepted as the winner (bounded retry, then a
-/// replace of stale content). See [`publish_with`] for the exact policy.
+/// replace of stale content). See `publish_with` for the exact policy.
 pub fn publish(
     temp: &Path,
     destination: &Path,

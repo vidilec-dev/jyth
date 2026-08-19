@@ -13,7 +13,7 @@
 //! digests before any asynchronous materialization begins.
 //!
 //! The type replaces the historical public role of
-//! [`crate::ops::registry::ImageReference`]: registry URL construction
+//! `ImageReference`: registry URL construction
 //! consumes an `OciReference` directly instead of reparsing a raw string.
 
 use std::fmt;

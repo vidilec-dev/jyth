@@ -35,7 +35,7 @@ use crate::storage::namespace::Namespace;
 /// `link` must be an [`ArtifactLink::Http`] pointing at a manifest URL. The
 /// operation accepts single-image manifests directly and OCI indices / Docker
 /// manifest lists via a second GET keyed by digest. Platform selection always
-/// targets Linux with the host's architecture (mapped through [`host_arch`]).
+/// targets Linux with the host's architecture (mapped through `host_arch`).
 ///
 /// `expected_link_digest` is the digest of the `link` snapshot the caller
 /// holds. The blueprint is cached under `link_ref.link_digest` (which may be
@@ -129,7 +129,7 @@ pub async fn blueprint(
 // ---------------------------------------------------------------------------
 
 /// The host architecture tag used to match a manifest entry. Mapped through
-/// [`host_arch`] so `x86_64` becomes `amd64` and `aarch64` becomes `arm64`.
+/// `host_arch` so `x86_64` becomes `amd64` and `aarch64` becomes `arm64`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Arch {
     Amd64,

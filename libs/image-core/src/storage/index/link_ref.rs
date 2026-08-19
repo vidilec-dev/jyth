@@ -1,16 +1,16 @@
 //! Reference lookup and creation.
 //!
-//! The reference table maps a [`ReferenceKey`] (source-link identity plus
-//! namespace) to its matched canonical [`EntryIdentity`]. The reverse
-//! mapping [`ENTRY_REFERENCES`][crate::storage::index::store::ENTRY_REFERENCES]
-//! records the same relationship in the opposite direction so reference
-//! rebinding can be performed atomically in both directions.
+//! The reference table maps a `ReferenceKey` (source-link identity plus
+//! namespace) to its matched canonical `EntryIdentity`. The reverse
+//! mapping `ENTRY_REFERENCES` records the same relationship in the opposite
+//! direction so reference rebinding can be performed atomically in both
+//! directions.
 //!
 //! Before materialization, the identity assigned by [`get_or_create`] is
 //! provisional: entry canonicalization may replace that identity with an
 //! existing entry identity later, but only within the same namespace.
 //!
-//! `ReferenceKey` is derived from a [`Reference`]; the index APIs accept and
+//! `ReferenceKey` is derived from a `Reference`; the index APIs accept and
 //! return `Reference` directly. There is no longer a redundant paired
 //! `ReferenceHandle` that could carry an inconsistent key/reference pair.
 

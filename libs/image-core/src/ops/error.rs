@@ -1,9 +1,9 @@
 //! Taxonomy of errors raised by the image materialization operations.
 //!
-//! Each public operation in [`crate::ops`] returns a [`Report<OperationError>`].
+//! Each public operation in [`crate::ops`] returns a [`error_stack::Report<OperationError>`].
 //! The taxonomy distinguishes the categories listed below so callers can
 //! inspect the failure location without inspecting the attached third-party
-//! error. External errors are attached to the [`Report`] via
+//! error. External errors are attached to the [`error_stack::Report`] via
 //! [`error_stack::Report::attach`].
 
 use std::path::PathBuf;

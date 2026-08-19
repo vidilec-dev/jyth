@@ -1,7 +1,7 @@
 //! `IndexStore`: the redb database owner and the table/durability helpers.
 //!
 //! The store owns a [`redb::Database`] handle wrapped in an `Arc` so that
-//! free functions in [`super::reference`], [`super::entry`], and
+//! free functions in [`super::link_ref`], [`super::file_ref`], and
 //! [`super::blueprint`] can open read and write transactions against the
 //! same database. The store also owns the versioned cache root so that
 //! artifact-path lookups derived from a [`Namespace`](crate::storage::namespace::Namespace)
