@@ -51,10 +51,20 @@ jobs:
       - name: Check public API documentation
         run: cargo doc --workspace --no-deps --all-features --locked
 
+  deps:
+    name: Dependency policy
+    # cargo-deny-action is a container action and only runs on Linux; the
+    # quality job is Windows, so the deny gate lives in its own job.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
       - name: Enforce the dependency policy
         uses: embarkstudios/cargo-deny-action@v2
         with:
           command: check
+          arguments: --all-features
 
   live-gates:
     name: Live HCS gates (cold + warm)
