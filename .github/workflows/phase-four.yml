@@ -22,6 +22,10 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
+          # The boot-image `init_binary_resolves_via_escargot` test
+          # cross-compiles the guest `init` binary for the musl target;
+          # without the target installed the nested cargo build fails.
+          targets: x86_64-unknown-linux-musl
 
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
