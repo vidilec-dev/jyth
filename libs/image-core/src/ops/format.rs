@@ -15,8 +15,11 @@ use crate::ops::error::OperationError;
 ///
 /// The largest single fixed header is the Linux bzImage check at offset
 /// `0x202 + 4`. We additionally allow TAR detection to inspect a 512-byte
-/// block when present.
-pub const MIN_HEADER_LEN: usize = 0x206;
+/// block when present, and the empty-TAR check must see the full two-block
+/// (1024-byte) trailer of zero bytes (`is_tar`). Sniffing a header shorter
+/// than 1024 bytes would reject a valid empty TAR layer, so the minimum
+/// covers the empty-TAR case as well.
+pub const MIN_HEADER_LEN: usize = 0x400;
 
 /// Result of an artifact sniff.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

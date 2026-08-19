@@ -217,6 +217,29 @@ async fn decompresses_gzip_bzimage() {
 }
 
 #[tokio::test]
+async fn decompresses_gzip_empty_tar() {
+    // A valid empty TAR is 1024 zero bytes. The format sniff reads only
+    // `MIN_HEADER_LEN` bytes of the decompressed payload, so this regression
+    // guards the empty-TAR path (two zero blocks) against a header minimum
+    // smaller than 1024 bytes.
+    let inner = vec![0u8; 1024];
+    let payload = gzip_once(&inner);
+    let uuid = Uuid::now_v7();
+    let path = stage_in_global_namespace(Namespace::Layers, uuid, &payload);
+    let entry = compressed_ref(&path, uuid, Namespace::Layers, ArtifactCompression::Gzip);
+
+    let out = decompress_ok(entry).await;
+
+    assert_eq!(out.artifact_type, ArtifactType::ContainerTar);
+    assert_eq!(out.artifact_compression, ArtifactCompression::None);
+    assert_eq!(out.uuid, uuid);
+    assert_eq!(out.namespace, Namespace::Layers);
+    assert!(out.path().exists());
+    assert_eq!(out.file_digest, on_disk_digest(&out.path()));
+    assert_eq!(out.file_digest.file_size, inner.len() as u128);
+}
+
+#[tokio::test]
 async fn decompresses_two_concatenated_gzip_members() {
     let a = tar_archive();
     let b = cpio_archive();
