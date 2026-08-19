@@ -31,7 +31,7 @@ impl ModuleLoader {
             .map(|root| Path::new(root).join(&release))
             .find(|dir| dir.exists());
 
-if modules_dir.is_none() {
+        if modules_dir.is_none() {
             #[cfg(feature = "tracing")]
             tracing::info!(
                 "[JythInit][ModuleLoader::New]: no module tree for {}; using built-in drivers only",
@@ -45,7 +45,7 @@ if modules_dir.is_none() {
     pub(crate) fn load(&self, name: &str) -> InitResult<Option<()>> {
         use std::os::unix::io::IntoRawFd;
 
-if Self::is_builtin(name) {
+        if Self::is_builtin(name) {
             #[cfg(feature = "tracing")]
             tracing::info!(
                 "[JythInit][ModuleLoader::Load]: {} is built into the kernel",

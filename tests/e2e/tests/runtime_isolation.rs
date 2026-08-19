@@ -582,8 +582,7 @@ async fn killed_holder_session_is_recovered_by_a_fresh_process() -> TestResult {
             holder_marker.as_os_str().to_os_string(),
         ],
     )?;
-    let (holder_uuid, holder_db) =
-        wait_for_ready(&holder_marker, Duration::from_secs(60)).await?;
+    let (holder_uuid, holder_db) = wait_for_ready(&holder_marker, Duration::from_secs(60)).await?;
 
     let networks = list_network_names()?;
     assert!(

@@ -26,7 +26,8 @@ fn main() {
         args.next()
             .expect("usage: journal-lock-hold <state-root> <session-id> <ready-file>"),
     );
-    let session_id = uuid::Uuid::parse_str(&session_id.to_string_lossy()).expect("parse session id");
+    let session_id =
+        uuid::Uuid::parse_str(&session_id.to_string_lossy()).expect("parse session id");
 
     // Binding (not `let _ =`) keeps the database handle — and with it the
     // redb writer lock — alive for the lifetime of this process.

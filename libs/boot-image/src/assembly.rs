@@ -90,10 +90,8 @@ async fn prepare_inner(
         });
     }
 
-    let overlay = overlay_to_cpio(&resolved, &dirs)
-        .change_context(BootImageError::Overlay)?;
-    let merged = merge_rootfs(&base_bytes, &overlay)
-        .change_context(BootImageError::Overlay)?;
+    let overlay = overlay_to_cpio(&resolved, &dirs).change_context(BootImageError::Overlay)?;
+    let merged = merge_rootfs(&base_bytes, &overlay).change_context(BootImageError::Overlay)?;
     cache::atomic_write(&out_path, &merged).change_context(BootImageError::Cache)?;
     let metadata = RootfsMetadata {
         schema_version: cache::CACHE_SCHEMA_VERSION,

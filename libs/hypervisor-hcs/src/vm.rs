@@ -42,7 +42,9 @@ impl Session {
         let current_path = crate::journal::session_path(&root, session_id);
         reconcile_stale_sessions(&root, &current_path).await?;
         let journal = crate::journal::SessionJournal::create_current(root, session_id)?;
-        Ok(Self { journal: Arc::new(journal) })
+        Ok(Self {
+            journal: Arc::new(journal),
+        })
     }
 
     /// Open a session under the resolved default state root (`JYTH_STATE_DIR`

@@ -53,7 +53,10 @@ fn list_session_dbs(root: &Path) -> Vec<String> {
         .expect("read state root")
         .filter_map(|entry| entry.ok())
         .map(|entry| entry.path())
-        .filter(|path| path.extension().is_some_and(|extension| extension == "redb"))
+        .filter(|path| {
+            path.extension()
+                .is_some_and(|extension| extension == "redb")
+        })
         .map(|path| {
             path.file_name()
                 .expect("db name")
