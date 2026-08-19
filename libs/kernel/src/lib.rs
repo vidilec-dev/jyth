@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Kernel source specification and materialization.
 //!
 //! # Overview

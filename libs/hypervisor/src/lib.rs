@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Host virtualization backends for Jyth.
 //!
 //! The Windows Hypervisor Platform backend is the supported production path

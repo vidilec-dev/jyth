@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Guest-side init process for the Jyth command bus and process supervisor.
 //!
 //! # Responsibility (SolidArchitecturePlan target catalog)

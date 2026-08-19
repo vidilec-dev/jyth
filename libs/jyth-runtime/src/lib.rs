@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Host-side VM application lifecycle orchestration.
 //!
 //! This crate owns the launch and shutdown orchestration of a Jyth VM as an

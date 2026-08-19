@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Host-to-guest command transport over TCP (TcpTransportMigrationPlan).
 //!
 //! The crate exposes blocking and Tokio-compatible streams plus framed

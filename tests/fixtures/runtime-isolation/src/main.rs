@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Test fixture: creates real HCS host resources in a separate process for
 //! the e2e runtime-isolation tests.
 //!

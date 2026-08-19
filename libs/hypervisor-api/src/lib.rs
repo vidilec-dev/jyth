@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Host-neutral backend and instance contracts (SolidArchitecturePlan A10).
 //!
 //! This crate owns the backend lifecycle contracts shared by runtime and

@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Root filesystem materialization.
 //!
 //! Resolves a rootfs source link (local file, in-memory bytes, HTTP

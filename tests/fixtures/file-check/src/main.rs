@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Validate and report the contents of a host file.
 
 use std::io;

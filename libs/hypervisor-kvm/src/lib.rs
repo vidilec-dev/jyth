@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Experimental Linux/KVM backend (compile-only for v0.1.0).
 //!
 //! KVM remains experimental and is not part of the Windows/HCS v0.1.0

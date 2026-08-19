@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Host-neutral VM specifications and outcomes.
 //!
 //! This crate owns the validated, host-agnostic values that describe a VM:

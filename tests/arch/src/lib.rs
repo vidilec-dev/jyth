@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Architecture enforcement for the Jyth workspace.
 //!
 //! This crate exists only to run its test suite (`cargo test -p

@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Compile a Linux kernel inside a jyth VM through the reusable compiler
 //! adapter and copy the cached bzImage to the host.
 //!

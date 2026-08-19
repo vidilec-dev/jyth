@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Stable host/guest command and event messages.
 //!
 //! Messages are serialized with `rkyv` and exchanged as length-prefixed

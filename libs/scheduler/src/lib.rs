@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! A generic conditional-action coordination engine.
 //!
 //! The engine coordinates work whose start is gated by a boolean trigger:

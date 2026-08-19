@@ -1,3 +1,4 @@
+#![deny(missing_docs)]
 //! Shared fixtures and host-serialization helpers for the end-to-end tests.
 //!
 //! # Responsibility (SolidArchitecturePlan target catalog)
