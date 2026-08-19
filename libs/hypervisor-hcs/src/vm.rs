@@ -344,6 +344,13 @@ impl Vm {
 
 impl Vm {
     /// Create an HCS VM within an explicit runtime session.
+    ///
+    /// The parameter list is intentionally flat: each argument maps 1:1 onto a
+    /// [`crate::conf::Conf`] builder field, and the wrapper exists so callers
+    /// do not need to build a `Conf` for the common case. The lint is allowed
+    /// because the arguments are cohesive and the alternative would force
+    /// every caller through the builder for no semantic gain.
+    #[allow(clippy::too_many_arguments)]
     pub async fn new_with_session(
         session: &Session,
         kernel: &Path,
