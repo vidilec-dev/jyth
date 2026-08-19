@@ -51,13 +51,17 @@ jobs:
 
   live-gates:
     name: Live HCS gates (cold + warm)
-    # Runs only when a self-hosted runner carrying the `hyper-v` label is
-    # registered; GitHub skips the job when no such runner exists, so PRs
-    # never block on a machine that is not present. `if: always()` keeps the
-    # live gates independent of the quality job's outcome — the live suite
-    # stays a pending release gate, not a PR gate.
+    # The live HCS gates need a Windows machine with Hyper-V, so they route to
+    # a self-hosted runner carrying the `hyper-v` label. GitHub never skips a
+    # job whose labels match no runner: the job stays queued until a matching
+    # runner comes online and fails if it remains queued for more than 24
+    # hours. To keep that queue-and-fail behavior off PRs, this job runs only
+    # on pushes to the default branch or on manual dispatch — it is a release
+    # gate, not a PR gate. Register the `hyper-v` runner before the gate can
+    # pass.
     runs-on: [self-hosted, hyper-v]
-    if: always()
+    timeout-minutes: 180
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     steps:
       - name: Check out source
         uses: actions/checkout@v4
