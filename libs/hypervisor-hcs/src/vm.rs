@@ -2591,6 +2591,7 @@ mod tests {
     /// `cargo test` skips it; otherwise HCS rejects the create with
     /// `HRESULT 0x80070003` (`ERROR_PATH_NOT_FOUND`) when the staged
     /// kernel/initrd referenced here aren't present at the repo root.
+    #[ignore]
     #[tokio::test]
     async fn test_vm_shutdown_cleans_up_hcs_system() {
         let start = time::SystemTime::now();
@@ -2676,6 +2677,7 @@ mod tests {
     ///    `Get-HnsNetwork | Where Name -like 'jyth-nat-*'` returns
     ///    empty — i.e. our lifecycle-owned NAT network was torn down
     ///    with the VM, no orphans survive.
+    #[ignore]
     #[tokio::test]
     async fn from_conf_attaches_network_and_vm_boots() {
         let root = std::env::temp_dir().join(format!("jyth-live-{}", Uuid::now_v7()));
@@ -2746,6 +2748,7 @@ mod tests {
     /// `cargo test -p hypervisor -- --ignored --test-threads=1`. The
     /// crate has no in-crate lock guard (the e2e suite owns one), so do
     /// not run this concurrently with other live HCS tests.
+    #[ignore]
     #[tokio::test]
     async fn com1_pipe_dacl_contains_vm_identity_after_launch() {
         let root = std::env::temp_dir().join(format!("jyth-live-{}", Uuid::now_v7()));
