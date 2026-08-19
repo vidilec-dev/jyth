@@ -1,2 +1,5 @@
-# The kernel-builder script is embedded byte-for-byte and executed by Alpine /bin/sh.
+# Shell scripts are embedded byte-for-byte and executed by Alpine /bin/sh,
+# so they must stay POSIX LF on every checkout platform. The kernel-builder
+# script exists in two copies; the glob protects both and any future script.
+*.sh text eol=lf
 /binaries/kernel-builder/src/build_kernel.sh text eol=lf
